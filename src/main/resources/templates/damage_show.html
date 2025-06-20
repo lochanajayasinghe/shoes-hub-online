@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Damage Details | HostelPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#800000',  // Maroon
+                        secondary: '#FFD700', // Yellow
+                        accent: '#6366F1',
+                        dark: '#1F2937'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .detail-card {
+            transition: all 0.2s ease;
+        }
+        .detail-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="h-full bg-gray-100">
+<div class="min-h-full">
+    <nav class="bg-primary">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center">
+                    <div class="shrink-0">
+                        <i class="fas fa-home text-white text-2xl"></i>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a th:href="@{/home}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-maroon-800 hover:text-white">Dashboard</a>
+                            <a th:href="@{/damage}" class="rounded-md bg-white px-3 py-2 text-sm font-medium text-primary hover:bg-gray-100">Damages</a>
+                            <a th:href="@{/}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-maroon-800 hover:text-white">Room Allocation</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">
+                        <i class="fas fa-file-alt text-primary mr-2"></i> Damage Report Details
+                    </h1>
+                    <div class="mt-2 flex items-center text-gray-600">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <span>Detailed view of damage report #<span th:text="${damage.damage_Id}"></span></span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span th:class="${damage.settled} ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'"
+                          class="px-3 py-1 rounded-full text-sm font-medium">
+                        <i th:class="${damage.settled} ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'" class="mr-1"></i>
+                        <span th:text="${damage.settled} ? 'Settled' : 'Pending'"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="flex justify-between mb-6">
+            <a th:href="@{/damage/{id}/settle(id=${damage.damage_Id})}"
+               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-secondary hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary">
+                <i class="fas fa-money-bill-wave mr-2"></i> Mark as Settled
+            </a>
+        </div>
+
+        <div class="px-4 py-6 sm:px-0">
+            <div class="bg-white shadow rounded-lg overflow-hidden detail-card">
+                <div class="p-6">
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        <div class="border-b sm:border-b-0 pb-4 sm:pb-0">
+                            <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                                <i class="fas fa-hashtag text-primary mr-2"></i> Damage ID
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-600 pl-7" th:text="${damage.damage_Id}"></p>
+                        </div>
+                        <div class="border-b pb-4 sm:pb-0">
+                            <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                                <i class="fas fa-user text-primary mr-2"></i> Registration Number
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-600 pl-7" th:text="${damage.regNo}"></p>
+                        </div>
+                        <div class="border-b sm:border-b-0 pb-4 sm:pb-0">
+                            <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                                <i class="fas fa-door-open text-primary mr-2"></i> Room ID
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-600 pl-7" th:text="${damage.roomId}"></p>
+                        </div>
+                        <div class="border-b pb-4 sm:pb-0">
+                            <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                                <i class="fas fa-dollar-sign text-primary mr-2"></i> Amount
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-600 pl-7">$<span th:text="${damage.amount}"></span></p>
+                        </div>
+                        <div class="sm:col-span-2 border-b pb-4">
+                            <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                                <i class="fas fa-align-left text-primary mr-2"></i> Description
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-600 pl-7" th:text="${damage.description} ?: 'No description provided'"></p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                                <i class="fas fa-calendar-day text-primary mr-2"></i> Damage Date
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-600 pl-7" th:text="${#temporals.format(damage.damageDate, 'yyyy-MM-dd')}"></p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                                <i class="fas fa-info-circle text-primary mr-2"></i> Status
+                            </h3>
+                            <p class="mt-1 text-sm font-bold pl-7"
+                               th:text="${damage.settled} ? 'Settled' : 'Pending'"
+                               th:class="${damage.settled} ? 'text-green-600' : 'text-yellow-600'"></p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-end space-x-3">
+                        <a th:href="@{/damage}"
+                           class="inline-flex items-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                            <i class="fas fa-arrow-left mr-2"></i> Back to List
+                        </a>
+                        <a th:href="@{/damage/{id}/edit(id=${damage.damage_Id})}"
+                           class="inline-flex items-center rounded-md border border-transparent bg-primary py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-maroon-800 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                            <i class="fas fa-edit mr-2"></i> Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-base text-gray-500">
+                &copy; 2023 HostelPro. All rights reserved.
+            </p>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

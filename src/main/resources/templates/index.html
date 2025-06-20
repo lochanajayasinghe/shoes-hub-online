@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#800000',  // Maroon
+                        secondary: '#FFD700', // Yellow
+                        accent: '#6366F1'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #800000 0%, #A52A2A 100%); /* Maroon gradient */
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="h-full bg-gray-100">
+<div class="min-h-full">
+    <nav class="bg-primary"> <!-- Changed from bg-gray-800 to bg-primary -->
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center">
+                    <div class="shrink-0">
+                        <i class="fas fa-home text-white text-2xl"></i>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a th:href="@{/home}" class="rounded-md bg-white px-3 py-2 text-sm font-medium text-primary hover:bg-gray-100">Dashboard</a>
+                            <a th:href="@{/damage}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-maroon-800 hover:text-white">Damages</a>
+                            <a th:href="@{/}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-maroon-800 hover:text-white">Room Allocation</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<!-- Hero Section -->
+<div class="hero-bg text-white">
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+            Hostel Management Made Simple
+        </h1>
+        <p class="mt-6 text-xl max-w-3xl mx-auto">
+            An integrated solution for room allocation and damage management in university hostels
+        </p>
+        <div class="mt-10 flex justify-center space-x-4">
+            <a th:href="@{/damage}" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white hover:bg-gray-100 md:py-4 md:text-lg md:px-10">
+                Damage System
+            </a>
+            <a th:href="@{/}" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-gray-900 bg-secondary hover:bg-yellow-600 md:py-4 md:text-lg md:px-10">
+                Room Allocation
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div id="features" class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+            <h2 class="text-base text-primary font-semibold tracking-wide uppercase">Features</h2>
+            <p class="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
+                Everything you need to manage your hostel
+            </p>
+        </div>
+
+        <div class="mt-10">
+            <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- Feature 1 -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm transition duration-300 card-hover">
+                    <div class="flex items-center justify-center h-12 w-12 rounded-md bg-primary text-white">
+                        <i class="fas fa-bed text-xl"></i>
+                    </div>
+                    <div class="mt-5">
+                        <h3 class="text-lg font-medium text-gray-900">Room Allocation</h3>
+                        <p class="mt-2 text-base text-gray-500">
+                            Efficiently assign students to rooms with automatic availability tracking and conflict prevention.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm transition duration-300 card-hover">
+                    <div class="flex items-center justify-center h-12 w-12 rounded-md bg-secondary text-gray-900">
+                        <i class="fas fa-hammer text-xl"></i>
+                    </div>
+                    <div class="mt-5">
+                        <h3 class="text-lg font-medium text-gray-900">Damage Management</h3>
+                        <p class="mt-2 text-base text-gray-500">
+                            Track, document, and resolve property damages with automated notifications and settlement tracking.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm transition duration-300 card-hover">
+                    <div class="flex items-center justify-center h-12 w-12 rounded-md bg-accent text-white">
+                        <i class="fas fa-chart-line text-xl"></i>
+                    </div>
+                    <div class="mt-5">
+                        <h3 class="text-lg font-medium text-gray-900">Real-time Reports</h3>
+                        <p class="mt-2 text-base text-gray-500">
+                            Generate comprehensive reports on room occupancy, damage history, and financial impacts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Cards Section -->
+<div class="py-12 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-12">Our Management Systems</h2>
+
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <!-- Damage System Card -->
+            <div class="bg-white overflow-hidden shadow rounded-lg transition duration-300 card-hover">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-primary bg-opacity-10 p-3 rounded-full">
+                            <i class="fas fa-hammer text-primary text-2xl"></i>
+                        </div>
+                        <div class="ml-5">
+                            <h3 class="text-lg font-medium text-gray-900">Damage Management System</h3>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-base text-gray-500">
+                            Comprehensive tool for reporting, tracking, and settling property damages with automated notifications and financial tracking.
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <a th:href="@{/damage}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-maroon-800">
+                            Go to Damage System <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Allocation Card -->
+            <div class="bg-white overflow-hidden shadow rounded-lg transition duration-300 card-hover">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-secondary bg-opacity-10 p-3 rounded-full">
+                            <i class="fas fa-bed text-gray-900 text-2xl"></i>
+                        </div>
+                        <div class="ml-5">
+                            <h3 class="text-lg font-medium text-gray-900">Room Allocation System</h3>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-base text-gray-500">
+                            Efficient student room assignment with real-time availability tracking, conflict resolution, and reporting.
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <a th:href="@{/}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray-900 bg-secondary hover:bg-yellow-600">
+                            Go to Room Allocation <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-white border-t border-gray-200">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="md:flex md:items-center md:justify-between">
+            <div class="flex justify-center md:order-2 space-x-6">
+                <a href="#" class="text-gray-400 hover:text-gray-500">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-gray-500">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-gray-500">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+            <div class="mt-8 md:mt-0 md:order-1">
+                <p class="text-center text-base text-gray-400">
+                    &copy; 2023 HostelPro. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

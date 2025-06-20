@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${damage.damage_Id != null} ? 'Edit Damage' : 'Create Damage'">Damage Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#800000',  // Maroon
+                        secondary: '#FFD700', // Yellow
+                        accent: '#6366F1',
+                        dark: '#1F2937',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .form-input {
+            transition: all 0.2s ease;
+        }
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
+            border-color: #800000;
+        }
+        .error-input {
+            border-color: #EF4444;
+        }
+        .error-input:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+        .success-message {
+            animation: fadeInOut 4s ease-in-out forwards;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
+</head>
+<body class="h-full bg-gray-100">
+<div class="min-h-full">
+    <nav class="bg-primary">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center">
+                    <div class="shrink-0">
+                        <i class="fas fa-home text-white text-2xl"></i>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a th:href="@{/home}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-maroon-800 hover:text-white">Dashboard</a>
+                            <a th:href="@{/damage}" class="rounded-md bg-white px-3 py-2 text-sm font-medium text-primary hover:bg-gray-100">Damages</a>
+                            <a th:href="@{/}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-maroon-800 hover:text-white">Room Allocation</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">
+                        <i class="fas fa-hammer text-primary mr-2"></i>
+                        <span th:text="${damage.damage_Id != null} ? 'Edit Damage Report' : 'Create New Damage Report'"></span>
+                    </h1>
+                    <div class="mt-2 flex items-center text-gray-600">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <span>Report and track damages in hostel rooms</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span th:class="${damage.damage_Id != null} ?
+                                 'bg-warning bg-opacity-10 text-warning' :
+                                 'bg-success bg-opacity-10 text-success'"
+                          class="px-3 py-1 rounded-full text-sm font-medium">
+                        <i th:class="${damage.damage_Id != null} ? 'fas fa-edit' : 'fas fa-plus'" class="mr-1"></i>
+                        <span th:text="${damage.damage_Id != null} ? 'Edit Mode' : 'New Report'"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Success Message -->
+        <div th:if="${message}" class="success-message bg-success-100 border border-success-400 text-success-700 px-4 py-3 rounded mb-6">
+            <div class="flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span th:text="${message}"></span>
+            </div>
+        </div>
+
+        <div class="px-4 py-6 sm:px-0">
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                <form th:action="@{/damage/save}" th:object="${damage}" method="post" class="p-6 space-y-6">
+                    <input type="hidden" th:field="*{damage_Id}">
+
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        <div>
+                            <label for="regNo" class="block text-sm font-medium text-gray-700 flex items-center">
+                                <i class="fas fa-id-card text-primary mr-2"></i> Registration Number
+                                <span class="text-danger ml-1">*</span>
+                            </label>
+                            <div class="mt-1 relative">
+                                <input type="text" id="regNo" th:field="*{regNo}"
+                                       th:class="${#fields.hasErrors('regNo')} ?
+                                               'error-input form-input block w-full rounded-md shadow-sm' :
+                                               'form-input block w-full rounded-md border-gray-300 shadow-sm'"
+                                       placeholder="Enter student registration number">
+                                <div th:if="${#fields.hasErrors('regNo')}" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-exclamation-circle text-danger"></i>
+                                </div>
+                            </div>
+                            <p th:if="${#fields.hasErrors('regNo')}" th:errors="*{regNo}" class="mt-1 text-sm text-danger flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                <span th:utext="${#strings.replace(#messages.msg(th:errors='*{regNo}'), 'regNo', 'Registration number')}"></span>
+                            </p>
+                        </div>
+
+                        <div>
+                            <label for="roomId" class="block text-sm font-medium text-gray-700 flex items-center">
+                                <i class="fas fa-door-open text-primary mr-2"></i> Room ID
+                                <span class="text-danger ml-1">*</span>
+                            </label>
+                            <div class="mt-1 relative">
+                                <input type="text" id="roomId" th:field="*{roomId}"
+                                       th:class="${#fields.hasErrors('roomId')} ?
+                                               'error-input form-input block w-full rounded-md shadow-sm' :
+                                               'form-input block w-full rounded-md border-gray-300 shadow-sm'"
+                                       placeholder="Enter room number">
+                                <div th:if="${#fields.hasErrors('roomId')}" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-exclamation-circle text-danger"></i>
+                                </div>
+                            </div>
+                            <p th:if="${#fields.hasErrors('roomId')}" th:errors="*{roomId}" class="mt-1 text-sm text-danger flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                <span th:utext="${#strings.replace(#messages.msg(th:errors='*{roomId}'), 'roomId', 'Room number')}"></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="amount" class="block text-sm font-medium text-gray-700 flex items-center">
+                            <i class="fas fa-money-bill-wave text-primary mr-2"></i> Damage Cost
+                            <span class="text-danger ml-1">*</span>
+                        </label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500 sm:text-sm">Rs:</span>
+                            </div>
+                            <input type="number" step="0.01" min="0" id="amount" th:field="*{amount}"
+                                   th:class="${#fields.hasErrors('amount')} ?
+                                           'error-input block w-full pl-7 pr-12 rounded-md' :
+                                           'form-input block w-full pl-7 pr-12 rounded-md border-gray-300'"
+                                   placeholder="0.00">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500 sm:text-sm">LKR</span>
+                            </div>
+                        </div>
+                        <p th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" class="mt-1 text-sm text-danger flex items-center">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            <span th:utext="${#strings.replace(#messages.msg(th:errors='*{amount}'), 'amount', 'Damage cost')}"></span>
+                        </p>
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 flex items-center">
+                            <i class="fas fa-align-left text-primary mr-2"></i> Damage Description
+                            <span class="text-danger ml-1">*</span>
+                        </label>
+                        <div class="mt-1 relative">
+                            <textarea id="description" th:field="*{description}" rows="4"
+                                      th:class="${#fields.hasErrors('description')} ?
+                                              'error-input block w-full rounded-md shadow-sm' :
+                                              'form-input block w-full rounded-md border-gray-300 shadow-sm'"
+                                      placeholder="Describe the damage in detail..."></textarea>
+                            <div th:if="${#fields.hasErrors('description')}" class="absolute top-3 right-3">
+                                <i class="fas fa-exclamation-circle text-danger"></i>
+                            </div>
+                        </div>
+                        <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="mt-1 text-sm text-danger flex items-center">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            <span th:utext="${#strings.replace(#messages.msg(th:errors='*{description}'), 'description', 'Damage description')}"></span>
+                        </p>
+                        <p class="mt-1 text-xs text-gray-500">Please provide as much detail as possible about the damage.</p>
+                    </div>
+
+                    <div>
+                        <label for="damageDate" class="block text-sm font-medium text-gray-700 flex items-center">
+                            <i class="fas fa-calendar-day text-primary mr-2"></i> Date of Damage
+                            <span class="text-danger ml-1">*</span>
+                        </label>
+                        <div class="mt-1 relative max-w-xs">
+                            <input type="date" id="damageDate" th:field="*{damageDate}"
+                                   th:class="${#fields.hasErrors('damageDate')} ?
+                                           'error-input block w-full rounded-md shadow-sm' :
+                                           'form-input block w-full rounded-md border-gray-300 shadow-sm'">
+                            <div th:if="${#fields.hasErrors('damageDate')}" class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                                <i class="fas fa-exclamation-circle text-danger"></i>
+                            </div>
+                        </div>
+                        <p th:if="${#fields.hasErrors('damageDate')}" th:errors="*{damageDate}" class="mt-1 text-sm text-danger flex items-center">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            <span th:utext="${#strings.replace(#messages.msg(th:errors='*{damageDate}'), 'damageDate', 'Date of damage')}"></span>
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
+                        <a th:href="@{/damage}" class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                            <i class="fas fa-times mr-2"></i> Cancel
+                        </a>
+                        <button type="submit" class="inline-flex items-center justify-center rounded-md border border-transparent bg-primary py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-maroon-800 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors duration-200">
+                            <i class="fas fa-save mr-2"></i>
+                            <span th:text="${damage.damage_Id != null} ? 'Update Damage Report' : 'Submit Damage Report'"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-base text-gray-500">
+                &copy; 2023 HostelPro. All rights reserved.
+            </p>
+        </div>
+    </footer>
+</div>
+
+<script>
+    // Set default date to today
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateField = document.getElementById('damageDate');
+        if (dateField && !dateField.value) {
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            dateField.value = formattedDate;
+        }
+
+        // Auto-format currency input
+        const amountField = document.getElementById('amount');
+        if (amountField) {
+            amountField.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Allocation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#800000',  // Maroon
+            secondary: '#FFD700', // Yellow
+            accent: '#6366F1'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="h-full bg-gray-100">
+<div class="min-h-full">
+  <nav class="bg-primary"> <!-- Changed from bg-gray-800 to bg-primary -->
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <div class="flex items-center">
+          <div class="shrink-0">
+            <i class="fas fa-home text-white text-2xl"></i>
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <a th:href="@{/damage}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-maroon-800 hover:text-white">Dashboard</a>
+              <a th:href="@{/damage}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-maroon-800 hover:text-white">Damages</a>
+              <a th:href="@{/}" class="rounded-md bg-white px-3 py-2 text-sm font-medium text-primary hover:bg-gray-100">Room Allocation</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <header class="bg-white shadow-sm">
+    <div class="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold text-gray-900">Student Allocation</h1>
+      <div class="mt-2">
+        <p>Hostel ID: <span th:text="${hostelId}"></span></p>
+        <p>Room ID: <span th:text="${roomId}"></span></p>
+      </div>
+    </div>
+  </header>
+  <main class="container mx-auto p-6">
+    <!-- Success/Error Messages -->
+    <div th:if="${success}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+      <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      <span th:text="${error}"></span>
+    </div>
+    <form th:action="@{/allocate-students}" method="post">
+      <input type="hidden" name="hostelId" th:value="${hostelId}">
+      <input type="hidden" name="roomId" th:value="${roomId}">
+      <!-- Room Availability Info -->
+      <div class="mb-4 bg-white p-4 rounded-lg shadow">
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="font-semibold">Available Spaces:</span>
+            <span id="roomAvailable" th:text="${roomAvailable}"></span>
+          </div>
+          <div>
+            <span class="font-semibold">Selected:</span>
+            <span id="selectedCount">0</span>/
+            <span th:text="${roomAvailable}"></span>
+          </div>
+        </div>
+      </div>
+      <!-- Search Bar -->
+      <div class="mb-6 bg-white p-4 rounded-lg shadow">
+        <div class="relative">
+          <input type="text" id="studentSearch" placeholder="Search by any student field..."
+                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <!-- Student Table -->
+      <div class="bg-white shadow-md rounded-lg overflow-hidden mb-4">
+        <table class="w-full" id="studentTable">
+          <thead class="bg-primary text-white"> <!-- Changed from bg-gray-800 to bg-primary -->
+          <tr>
+            <th class="px-6 py-3 text-center border">Select</th>
+            <th class="px-6 py-3 text-center border">Reg No</th>
+            <th class="px-6 py-3 text-center border">Surname</th>
+            <th class="px-6 py-3 text-center border">First Name</th>
+            <th class="px-6 py-3 text-center border">Email</th>
+            <th class="px-6 py-3 text-center border">Phone</th>
+            <th class="px-6 py-3 text-center border">Faculty</th>
+            <th class="px-6 py-3 text-center border">Batch</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="student : ${students}" class="border-b student-row">
+            <td class="p-3 text-center">
+              <input type="checkbox" name="selectedRegNo" th:value="${student.regNo}"
+                     class="form-checkbox h-5 w-5 text-primary student-checkbox">
+            </td>
+            <td class="px-6 py-4 text-center border student-regno" th:text="${student.regNo}"></td>
+            <td class="px-6 py-4 text-center border student-surname" th:text="${student.surname}"></td>
+            <td class="px-6 py-4 text-center border student-firstname" th:text="${student.firstName}"></td>
+            <td class="px-6 py-4 text-center border student-email" th:text="${student.email}"></td>
+            <td class="px-6 py-4 text-center border student-phone" th:text="${student.phone}"></td>
+            <td class="px-6 py-4 text-center border student-faculty" th:text="${student.faculty}"></td>
+            <td class="px-6 py-4 text-center border student-batch" th:text="${student.batch}"></td>
+          </tr>
+          </tbody>
+        </table>
+        <div id="noResults" class="p-4 text-center text-gray-500 hidden">
+          No matching students found
+        </div>
+      </div>
+      <div class="flex justify-between mt-4">
+        <a th:href="@{'/hostel/rooms?hostelId=' + ${hostelId}}"
+           class="bg-primary text-white px-4 py-2 rounded-md hover:bg-maroon-800">
+          ← Back to Rooms
+        </a>
+        <button type="submit" id="submitButton"
+                class="bg-secondary text-gray-900 px-4 py-2 rounded-md hover:bg-yellow-600">
+          Allocate Students
+        </button>
+      </div>
+    </form>
+  </main>
+</div>
+<script>
+  $(document).ready(function() {
+      const maxAllowed = parseInt($('#roomAvailable').text());
+
+      // Search functionality
+      $('#studentSearch').on('keyup', function() {
+          const searchText = $(this).val().toLowerCase();
+          let hasResults = false;
+
+          $('.student-row').each(function() {
+              const regNo = $(this).find('.student-regno').text().toLowerCase();
+              const surname = $(this).find('.student-surname').text().toLowerCase();
+              const firstName = $(this).find('.student-firstname').text().toLowerCase();
+              const email = $(this).find('.student-email').text().toLowerCase();
+              const phone = $(this).find('.student-phone').text().toLowerCase();
+              const faculty = $(this).find('.student-faculty').text().toLowerCase();
+              const batch = $(this).find('.student-batch').text().toLowerCase();
+
+              if (regNo.includes(searchText) ||
+                  surname.includes(searchText) ||
+                  firstName.includes(searchText) ||
+                  email.includes(searchText) ||
+                  phone.includes(searchText) ||
+                  faculty.includes(searchText) ||
+                  batch.includes(searchText)) {
+                  $(this).show();
+                  hasResults = true;
+              } else {
+                  $(this).hide();
+              }
+          });
+
+          $('#noResults').toggleClass('hidden', hasResults);
+      });
+
+      // Selection count and availability check
+      $(document).on('change', '.student-checkbox', function() {
+          const selectedCount = $('.student-checkbox:checked').length;
+          $('#selectedCount').text(selectedCount);
+
+          if (selectedCount > maxAllowed) {
+              $('#submitButton').prop('disabled', true)
+                  .addClass('bg-gray-400').removeClass('bg-secondary hover:bg-yellow-600')
+                  .attr('title', `Cannot select more than ${maxAllowed} students`);
+          } else {
+              $('#submitButton').prop('disabled', false)
+                  .addClass('bg-secondary hover:bg-yellow-600').removeClass('bg-gray-400')
+                  .removeAttr('title');
+          }
+
+          // Disable remaining checkboxes when max is reached
+          if (selectedCount >= maxAllowed) {
+              $('.student-checkbox:not(:checked)').prop('disabled', true);
+          } else {
+              $('.student-checkbox').prop('disabled', false);
+          }
+      });
+
+      // Prevent form submission if over limit (double check)
+      $('form').on('submit', function(e) {
+          const selectedCount = $('.student-checkbox:checked').length;
+          if (selectedCount > maxAllowed) {
+              e.preventDefault();
+              alert(`You cannot allocate more than ${maxAllowed} students to this room.`);
+          }
+      });
+  });
+</script>
+</body>
+</html>
